@@ -19,7 +19,7 @@ class StimDisplay(QGLWidget):
 
         self.app = app
 
-        self.context = None
+        self.ctx = None
         self.vao = None
 
         self.subscreen_viewports = [(0, 0, 100, 100),
@@ -30,7 +30,7 @@ class StimDisplay(QGLWidget):
 
     def initializeGL(self):
         # Create ModernGL context
-        self.context = moderngl.create_context()
+        self.ctx = moderngl.create_context()
 
         # Triangle vertices (x, y)
         vertices = np.array([
@@ -40,11 +40,11 @@ class StimDisplay(QGLWidget):
         ], dtype='f4')
 
         # Vertex Buffer Object
-        vbo = self.context.buffer(vertices)
+        vbo = self.ctx.buffer(vertices)
 
         # Vertex Array Object
-        self.vao = self.context.simple_vertex_array(
-            self.context.program(
+        self.vao = self.ctx.simple_vertex_array(
+            self.ctx.program(
                 vertex_shader="""
                 #version 330
                 in vec2 in_vert;
@@ -66,7 +66,7 @@ class StimDisplay(QGLWidget):
 
     def paintGL(self):
         # Clear the buffer
-        # self.context.clear(0.5, 0.5, 0.5, 1.0)
+        # self.ctx.clear(0.5, 0.5, 0.5, 1.0)
 
         print(f"Frame # {self.frame_cnt}")
         if self.frame_cnt % 2 == 0:
@@ -75,10 +75,10 @@ class StimDisplay(QGLWidget):
             print("Not clearing context!")
 
         for vp in self.subscreen_viewports:
-            self.context.viewport = vp
+            self.ctx.viewport = vp
 
             if self.frame_cnt % 2 == 0:
-                self.context.clear(0.5, 0.5, 0.5, 1.0, viewport=vp)
+                self.ctx.clear(0.5, 0.5, 0.5, 1.0, viewport=vp)
 
             # Render the triangle
             self.vao.render(moderngl.TRIANGLES)
