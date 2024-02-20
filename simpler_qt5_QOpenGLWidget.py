@@ -64,18 +64,22 @@ class StimDisplay(QOpenGLWidget):
         )
 
         # Clear the buffer
-        self.ctx.clear(0, 0, 0, 1)
+        # self.ctx.fbo.clear(0, 0, 0, 1)
         print('Initial clearing to 0.')
 
     def paintGL(self):
         print(f"Frame # {self.frame_cnt}")
 
+        fbo = self.ctx.detect_framebuffer()
+        fbo.use()
+
         # Clear subscreen 1
-        self.ctx.clear(0.5, 0.5, 0.5, 1.0, viewport=self.subscreen_viewports[1])
+        self.ctx.fbo.clear(0.5, 0.5, 0.5, 1.0, viewport=self.subscreen_viewports[1])
 
         # Render the triangle in subscreen 0
         self.ctx.viewport = self.subscreen_viewports[0]
         self.vao.render(moderngl.TRIANGLES)
+        self.ctx.fbo.release()
 
         self.frame_cnt += 1
 
