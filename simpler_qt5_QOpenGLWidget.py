@@ -64,7 +64,7 @@ class StimDisplay(QOpenGLWidget):
         )
 
         # Clear the buffer
-        # self.ctx.fbo.clear(0, 0, 0, 1)
+        self.ctx.fbo.clear(0, 0, 0, 1)
         print('Initial clearing to 0.')
 
     def paintGL(self):
